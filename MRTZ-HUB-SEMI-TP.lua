@@ -57,7 +57,7 @@ status.TextColor3 = Color3.fromRGB(255,50,50)
 status.Font = Enum.Font.Gotham
 status.TextSize = 12
 
--- DISCORD BUTTON 🔥
+-- DISCORD BUTTON
 local discordBtn = Instance.new("TextButton", frame)
 discordBtn.Size = UDim2.new(0.8,0,0,20)
 discordBtn.Position = UDim2.new(0.1,0,1,-25)
@@ -73,31 +73,44 @@ stroke.Color = Color3.fromRGB(120,180,255)
 stroke.Thickness = 1
 stroke.Transparency = 0.5
 
--- COPY LINK
+-- FUNCTION: STATUS AUTO CLEAR (2s)
+local function showStatus(text, color)
+	status.Text = text
+	status.TextColor3 = color or Color3.fromRGB(255,50,50)
+
+	task.spawn(function()
+		task.wait(2)
+		if status.Text == text then
+			status.Text = ""
+		end
+	end)
+end
+
+-- DISCORD CLICK
 discordBtn.MouseButton1Click:Connect(function()
-    if typeof(setclipboard) == "function" then
-        setclipboard("https://discord.gg/vV4TBnjxds")
-        status.Text = "Discord Link Copied 📋"
-    else
-        status.Text = "Copy nicht möglich ❌"
-    end
+	if typeof(setclipboard) == "function" then
+		setclipboard("https://discord.gg/vV4TBnjxds")
+		showStatus("Discord Link Copied 📋", Color3.fromRGB(120,180,255))
+	else
+		showStatus("Copy nicht möglich ❌")
+	end
 end)
 
--- HOVER EFFECT
+-- HOVER
 discordBtn.MouseEnter:Connect(function()
-    discordBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
-    stroke.Transparency = 0
+	discordBtn.BackgroundColor3 = Color3.fromRGB(50,50,50)
+	stroke.Transparency = 0
 end)
 
 discordBtn.MouseLeave:Connect(function()
-    discordBtn.BackgroundColor3 = Color3.fromRGB(35,35,35)
-    stroke.Transparency = 0.5
+	discordBtn.BackgroundColor3 = Color3.fromRGB(35,35,35)
+	stroke.Transparency = 0.5
 end)
 
--- VERIFY SYSTEM
+-- VERIFY
 button.MouseButton1Click:Connect(function()
 	if box.Text == KEY then
-		status.Text = "Correct Key ✅"
+		showStatus("Correct Key ✅", Color3.fromRGB(0,255,100))
 		
 		task.wait(0.5)
 		gui:Destroy()
@@ -125,6 +138,6 @@ button.MouseButton1Click:Connect(function()
 		end)
 
 	else
-		status.Text = "Wrong Key ❌"
+		showStatus("Wrong Key ❌")
 	end
 end)
